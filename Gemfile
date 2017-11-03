@@ -46,3 +46,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Use mysql2 as the database for Active Record
 gem 'mysql2'
+gem 'devise'
