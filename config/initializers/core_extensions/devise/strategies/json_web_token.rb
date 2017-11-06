@@ -7,8 +7,8 @@ module Devise
 
       def authenticate!
         return fail! unless claims
-        return fail! unless claims.has_key?(:user_id)
-        success! User.find(claims[:user_id])
+        return fail! unless claims.has_key?('user_id')
+        success! User.find(claims['user_id'])
       end
 
       private
