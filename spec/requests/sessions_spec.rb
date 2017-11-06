@@ -34,4 +34,11 @@ RSpec.describe 'Authentication requests', type: :request do
     expect(response).to have_http_status(:success)
     expect(json).to eq({ user: { id: user.id, email: user.email } })
   end
+
+  it 'does not provide access without JWT' do
+    get '/api/v1/users/edit', headers: json_headers
+    expect(response.content_type).to eq('application/json')
+    expect(response).to have_http_status(:unauthorized)
+    expect(json).to eq({ error: 'You need to sign in or sign up before continuing.' })
+  end
 end
