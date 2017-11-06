@@ -30,19 +30,35 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+  def edit
+    render json: resource, fields: [:id, :email]
+  end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+
+    resource_updated = update_resource(resource, account_update_params)
+    yield resource if block_given?
+    if resource_updated
+      bypass_sign_in resource, scope: resource_name
+      render json: resource, fields: [:id, :email]
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      render json: { errors: resource.errors.full_messages},
+             status: :unprocessable_entity
+    end
+  end
 
   # DELETE /resource
-  # def destroy
-  #   super
-  # end
+  def destroy
+    resource.destroy
+    Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
+    yield resource if block_given?
+    render json: { message: 'deleted' }
+  end
 
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
