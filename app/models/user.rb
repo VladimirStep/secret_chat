@@ -4,4 +4,6 @@ class User < ApplicationRecord
   # :recoverable, :rememberable, :trackable
   devise :database_authenticatable, :registerable, :validatable
   # devise :omniauthable, omniauth_providers: [:github]
+
+  has_one :profile, dependent: :destroy
 end
