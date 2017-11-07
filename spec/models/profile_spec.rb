@@ -13,6 +13,7 @@ RSpec.describe Profile, type: :model do
     it { should validate_presence_of(:gender) }
     it { should validate_length_of(:first_name).is_at_most(50) }
     it { should validate_length_of(:last_name).is_at_most(50) }
+    it { should validate_presence_of(:user) }
   end
 
   describe 'associations' do

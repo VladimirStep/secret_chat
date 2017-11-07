@@ -4,5 +4,5 @@ class Profile < ApplicationRecord
   belongs_to :user
 
   validates :first_name, :last_name, presence: true, length: { maximum: 50 }
-  validates :gender, presence: true
+  validates :user, :gender, presence: true
 end

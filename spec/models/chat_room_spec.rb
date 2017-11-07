@@ -14,10 +14,12 @@ RSpec.describe ChatRoom, type: :model do
     it { should validate_presence_of(:password) }
     it { should validate_length_of(:password).is_at_most(72) }
     it { should validate_confirmation_of(:password) }
+    it { should validate_presence_of(:owner) }
   end
 
   describe 'associations' do
     it { should belong_to(:owner).class_name('User').with_foreign_key(:user_id) }
     it { should have_db_column(:password_digest).of_type(:string) }
+    it { should have_many(:messages) }
   end
 end

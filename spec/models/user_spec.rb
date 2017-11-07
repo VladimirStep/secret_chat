@@ -28,5 +28,6 @@ RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_one(:profile) }
     it { should have_many(:chat_rooms) }
+    it { should have_many(:messages) }
   end
 end
