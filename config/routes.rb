@@ -8,4 +8,11 @@ Rails.application.routes.draw do
                controllers: { sessions: 'api/v1/sessions',
                               registrations: 'api/v1/registrations' }
   end
+
+  namespace :api do
+    namespace :v1 do
+      resource :profile, only: [:create, :show, :update, :destroy],
+                         defaults: { format: :json }
+    end
+  end
 end

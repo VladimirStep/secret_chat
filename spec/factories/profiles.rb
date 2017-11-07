@@ -3,6 +3,6 @@ FactoryBot.define do
     user
     first_name Faker::Name.first_name
     last_name Faker::Name.last_name
-    gender { [0, 1].sample }
+    gender { %w(male female).sample }
   end
 end
