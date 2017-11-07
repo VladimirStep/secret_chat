@@ -17,5 +17,6 @@ RSpec.describe Profile, type: :model do
 
   describe 'associations' do
     it { should belong_to(:user) }
+    it { should define_enum_for(:gender).with([:male, :female]) }
   end
 end
