@@ -1,5 +1,5 @@
 class Api::V1::ProfilesController < ApplicationController
-  before_action :get_profile
+  before_action :get_profile, except: [:create]
 
   def create
     profile = current_user.create_profile(profile_params)
