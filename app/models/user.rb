@@ -6,4 +6,5 @@ class User < ApplicationRecord
   # devise :omniauthable, omniauth_providers: [:github]
 
   has_one :profile, dependent: :destroy
+  has_many :chat_rooms, dependent: :destroy
 end
