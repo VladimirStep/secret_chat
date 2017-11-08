@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :chat_rooms, dependent: :destroy
   has_many :messages, dependent: :destroy
+  has_many :chat_accesses, dependent: :destroy
 end

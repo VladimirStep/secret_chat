@@ -29,5 +29,6 @@ RSpec.describe User, type: :model do
     it { should have_one(:profile) }
     it { should have_many(:chat_rooms) }
     it { should have_many(:messages) }
+    it { should have_many(:chat_accesses) }
   end
 end

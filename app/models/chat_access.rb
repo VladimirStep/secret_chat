@@ -3,4 +3,6 @@ class ChatAccess < ApplicationRecord
 
   belongs_to :user
   belongs_to :chat_room
+
+  validates :user, :chat_room, :status, presence: true
 end

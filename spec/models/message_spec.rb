@@ -7,6 +7,8 @@ RSpec.describe Message, type: :model do
 
   let(:message) { build(:message) }
 
+  subject { message }
+
   describe 'validations' do
     it { should validate_presence_of(:body) }
     it { should validate_presence_of(:author) }
