@@ -25,4 +25,30 @@ RSpec.describe ChatRoom, type: :model do
     it { should have_many(:chat_accesses) }
     it { should have_many(:visitors).class_name('User').through(:chat_accesses) }
   end
+
+  describe 'public instance methods' do
+    context 'responds to its methods' do
+      it { should respond_to(:has_granted_access?) }
+    end
+
+    context 'executes methods correctly' do
+      context '#has_granted_access?' do
+        let(:other_user) { create(:user) }
+        let(:visitor) { create(:user) }
+        let(:old_visitor) { create(:user) }
+
+        before(:each) do
+          create(:chat_access, user: visitor, chat_room: chat_room, status: 'opened')
+          create(:chat_access, user: old_visitor, chat_room: chat_room, status: 'closed')
+        end
+
+        it 'check access to chat room' do
+          expect(chat_room.has_granted_access?(chat_room.owner)).to be_truthy
+          expect(chat_room.has_granted_access?(other_user)).to be_falsey
+          expect(chat_room.has_granted_access?(visitor)).to be_truthy
+          expect(chat_room.has_granted_access?(old_visitor)).to be_falsey
+        end
+      end
+    end
+  end
 end

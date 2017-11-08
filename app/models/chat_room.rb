@@ -8,4 +8,8 @@ class ChatRoom < ApplicationRecord
 
   validates :name, presence: true, length: { in: 2..50 }
   validates :owner, presence: true
+
+  def has_granted_access?(current_user)
+    owner == current_user || chat_accesses.find_by(user: current_user)&.opened?
+  end
 end
