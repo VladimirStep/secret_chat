@@ -23,5 +23,6 @@ RSpec.describe ChatRoom, type: :model do
     it { should have_db_column(:password_digest).of_type(:string) }
     it { should have_many(:messages) }
     it { should have_many(:chat_accesses) }
+    it { should have_many(:visitors).class_name('User').through(:chat_accesses) }
   end
 end

@@ -30,5 +30,6 @@ RSpec.describe User, type: :model do
     it { should have_many(:chat_rooms) }
     it { should have_many(:messages) }
     it { should have_many(:chat_accesses) }
+    it { should have_many(:chats).class_name('ChatRoom').through(:chat_accesses) }
   end
 end
