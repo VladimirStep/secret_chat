@@ -15,6 +15,7 @@ Rails.application.routes.draw do
                          defaults: { format: :json }
       resources :chat_rooms, except: [:new, :edit], defaults: { format: :json } do
         resources :messages, except: [:new, :edit]
+        resource :chat_access, only: [:create, :update]
       end
     end
   end
