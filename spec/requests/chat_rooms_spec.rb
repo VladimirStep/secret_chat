@@ -69,6 +69,33 @@ RSpec.describe 'Requests to ChatRoomsController', type: :request do
                            })
       end
 
+      context 'verifying reset access' do
+        let(:new_password) { attributes_for(:chat_room, password: 'new_password')
+                                     .merge({ password_confirmation: 'new_password' }) }
+
+        before(:each) do
+          5.times { create(:chat_access, chat_room: @current_chat_room, status: 'opened') }
+        end
+
+        it 'should close all accesses when password changed' do
+          put "/api/v1/chat_rooms/#{@current_chat_room.id}",
+              params: { chat_room: new_password }.to_json,
+              headers: headers_with_jwt
+          expect(response.content_type).to eq('application/json')
+          expect(response).to have_http_status(:success)
+          expect(@current_chat_room.chat_accesses.pluck(:status).uniq).to eq(['closed'])
+        end
+
+        it 'should not close accesses when password does not changed' do
+          put "/api/v1/chat_rooms/#{@current_chat_room.id}",
+              params: { chat_room: correct_attributes }.to_json,
+              headers: headers_with_jwt
+          expect(response.content_type).to eq('application/json')
+          expect(response).to have_http_status(:success)
+          expect(@current_chat_room.chat_accesses.pluck(:status).uniq).to eq(['opened'])
+        end
+      end
+
       it 'should delete chat room' do
         delete "/api/v1/chat_rooms/#{@current_chat_room.id}",
             headers: headers_with_jwt
