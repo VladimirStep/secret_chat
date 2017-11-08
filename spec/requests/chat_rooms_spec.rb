@@ -76,6 +76,64 @@ RSpec.describe 'Requests to ChatRoomsController', type: :request do
         expect(response).to have_http_status(:success)
         expect(json).to eq({ message: 'deleted' })
       end
+
+      context 'where user is not chat owner' do
+        let(:other_user) { create(:user) }
+        let(:other_user_jwt) do
+          json_headers.merge({ 'AUTHORIZATION' => "Bearer #{JWTCoder.encode(user_id: other_user.id)}" })
+        end
+
+        context 'and has granted access' do
+          before(:each) do
+            create(:chat_access, user: other_user,
+                                 chat_room: @current_chat_room,
+                                 status: 'opened')
+          end
+
+          it 'should get chat room' do
+            get "/api/v1/chat_rooms/#{@current_chat_room.id}",
+                headers: other_user_jwt
+            expect(response.content_type).to eq('application/json')
+            expect(response).to have_http_status(:success)
+            expect(json).to eq({
+                                 chat_room: {
+                                   id: @current_chat_room.id,
+                                   name: @current_chat_room.name
+                                 }
+                               })
+          end
+        end
+
+        context 'and does not have granted access' do
+          it 'should not get chat room and show error' do
+            get "/api/v1/chat_rooms/#{@current_chat_room.id}",
+                headers: other_user_jwt
+            expect(response.content_type).to eq('application/json')
+            expect(response).to have_http_status(:unauthorized)
+            expect(json).to eq({
+                                 error: "You don't have permission to access this chat"
+                               })
+          end
+        end
+
+        context 'and has closed access' do
+          before(:each) do
+            create(:chat_access, user: other_user,
+                   chat_room: @current_chat_room,
+                   status: 'closed')
+          end
+
+          it 'should not get chat room and show error' do
+            get "/api/v1/chat_rooms/#{@current_chat_room.id}",
+                headers: other_user_jwt
+            expect(response.content_type).to eq('application/json')
+            expect(response).to have_http_status(:unauthorized)
+            expect(json).to eq({
+                                 error: "You don't have permission to access this chat"
+                               })
+          end
+        end
+      end
     end
   end
 

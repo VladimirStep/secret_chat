@@ -1,5 +1,6 @@
 class Api::V1::ChatRoomsController < ApplicationController
-  before_action :set_chat_room, except: [:index, :create]
+  before_action :set_chat_room, except: [:index, :create, :show]
+  before_action :authorize_user_access, only: [:show]
 
   def index
     chat_rooms = current_user.chat_rooms
@@ -46,5 +47,13 @@ class Api::V1::ChatRoomsController < ApplicationController
 
   def set_chat_room
     @chat_room = current_user.chat_rooms.find(params[:id])
+  end
+
+  def authorize_user_access
+    @chat_room = ChatRoom.find(params[:id])
+    unless @chat_room.has_granted_access?(current_user)
+      render json: { error: "You don't have permission to access this chat" },
+             status: :unauthorized and return
+    end
   end
 end
