@@ -3,4 +3,8 @@ class Message < ApplicationRecord
   belongs_to :chat_room
 
   validates :body, :author, :chat_room, presence: true
+
+  def user_is_author?(current_user)
+    author == current_user
+  end
 end

@@ -13,7 +13,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :profile, only: [:create, :show, :update, :destroy],
                          defaults: { format: :json }
-      resources :chat_rooms, except: [:new, :edit], defaults: { format: :json }
+      resources :chat_rooms, except: [:new, :edit], defaults: { format: :json } do
+        resources :messages, except: [:new, :edit]
+      end
     end
   end
 end
