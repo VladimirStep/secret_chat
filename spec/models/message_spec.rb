@@ -20,6 +20,22 @@ RSpec.describe Message, type: :model do
     it { should belong_to(:chat_room) }
   end
 
+  context 'callbacks' do
+    it { should callback(:filter_text).before(:save) }
+
+    describe '#filter_text replace words on save' do
+      let(:new_message) { create(:message, body: 'Text with bad_word in body') }
+
+      it 'should not contain bad_word' do
+        expect(new_message.body).not_to match(/bad_word/)
+      end
+
+      it 'should not contain ***' do
+        expect(new_message.body).to match(/\*\*\*/)
+      end
+    end
+  end
+
   describe 'public instance methods' do
     context 'responds to its methods' do
       it { should respond_to(:user_is_author?) }
