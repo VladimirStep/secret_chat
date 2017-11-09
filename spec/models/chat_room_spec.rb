@@ -28,6 +28,28 @@ RSpec.describe ChatRoom, type: :model do
 
   context 'callbacks' do
     it { should callback(:reset_accesses).before(:update) }
+
+    describe '#reset_accesses can update access' do
+      let(:private_chat) { create(:chat_room) }
+      let(:new_password) { attributes_for(:chat_room, password: 'new_password')
+                             .merge({ password_confirmation: 'new_password' }) }
+      let(:old_password) { attributes_for(:chat_room, password: 'password')
+                             .merge({ password_confirmation: 'password' }) }
+
+      before(:each) do
+        5.times { create(:chat_access, chat_room: private_chat, status: 'opened') }
+      end
+
+      it 'should reset access if password changes' do
+        private_chat.update_attributes(new_password)
+        expect(private_chat.chat_accesses.pluck(:status).uniq).to eq(['closed'])
+      end
+
+      it 'should not reset access if password does not change' do
+        private_chat.update_attributes(old_password)
+        expect(private_chat.chat_accesses.pluck(:status).uniq).to eq(['opened'])
+      end
+    end
   end
 
   describe 'public instance methods' do
