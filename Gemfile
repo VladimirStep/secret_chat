@@ -32,6 +32,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.6'
   gem 'factory_bot_rails'
   gem 'shoulda', git: 'https://github.com/thoughtbot/shoulda.git', branch: 'master'
+  gem 'shoulda-callback-matchers'
   gem 'faker'
 end
 

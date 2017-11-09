@@ -26,6 +26,10 @@ RSpec.describe ChatRoom, type: :model do
     it { should have_many(:visitors).class_name('User').through(:chat_accesses) }
   end
 
+  context 'callbacks' do
+    it { should callback(:reset_accesses).before(:update) }
+  end
+
   describe 'public instance methods' do
     context 'responds to its methods' do
       it { should respond_to(:has_granted_access?) }
