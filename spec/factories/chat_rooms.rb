@@ -3,5 +3,6 @@ FactoryBot.define do
     owner
     name { Faker::Book.unique.title }
     password 'password'
+    password_confirmation 'password'
   end
 end
